@@ -1,0 +1,61 @@
+
+CREATE TABLE IF NOT EXISTS property (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  price INT NOT NULL,
+  original_price INT DEFAULT 0,
+  rooms INT DEFAULT 0,
+  area INT DEFAULT 0,
+  address VARCHAR(255) DEFAULT '',
+  description TEXT,
+  created_at DATE DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS property_images (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NOT NULL,
+  image VARCHAR(255) NOT NULL,
+  FOREIGN KEY (property_id) REFERENCES property(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS clients (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    surname VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS workers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    surname VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    position VARCHAR(100),
+    commission_percent FLOAT DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS deals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    date_signed DATE,
+    type VARCHAR(50) NOT NULL,
+    amount DECIMAL(10, 2),
+    agency_commission DECIMAL(10, 2),
+    property_id INT NOT NULL,
+    buyer_id INT NOT NULL,
+    worker_id INT NOT NULL,
+    FOREIGN KEY (property_id) REFERENCES property(id) ON DELETE CASCADE,
+    FOREIGN KEY (buyer_id) REFERENCES clients(id),
+    FOREIGN KEY (worker_id) REFERENCES workers(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS callback_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_name VARCHAR(255) NOT NULL,
+    client_phone VARCHAR(20) NOT NULL,
+    request_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
